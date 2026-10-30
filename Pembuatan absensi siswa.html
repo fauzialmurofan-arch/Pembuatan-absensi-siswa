@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Siswa</title>
+    
+    <!-- Memuat Tailwind CSS untuk styling utama -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi warna kustom Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        hadir: '#106F85',
+                        izin: '#3b82f6`',
+                        sakit: '#f59e0b',
+                        alpa: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS Kustom untuk animasi -->
+    <style>
+        /* Tambahan styling untuk transisi halus */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-800">
+
+   
+    
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <!-- Header -->
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-primary mb-2">Sistem Absensi Siswa</h1>
+            <p class="text-slate-500">Catat dan pantau kehadiran siswa dengan mudah</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Bagian Kiri: Form Input -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-6">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2">Form Absensi</h2>
+                    <form id="formAbsensi">
+                        <!-- Input Nama -->
+                        <div class="mb-4">
+                            <label for="namaSiswa" class="block text-sm font-semibold text-slate-700 mb-1">Nama Siswa</label>
+                            <input type="text" id="namaSiswa" required placeholder="Masukkan nama lengkap" 
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <!-- Input Kelas -->
+                        <div class="mb-4">
+                            <label for="kelasSiswa" class="block text-sm font-semibold text-slate-700 mb-1">Kelas</label>
+                            <input type="text" id="kelasSiswa" required placeholder="Contoh: X RPL 1" 
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        </div>
+
+                        <!-- Pilihan Status -->
+                        <div class="mb-6">
+                            <label for="statusKehadiran" class="block text-sm font-semibold text-slate-700 mb-1">Status Kehadiran</label>
+                            <select id="statusKehadiran" required
+                                class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all bg-white">
+                                <option value="" disabled selected>Pilih Status...</option>
+                                <option value="Hadir">Hadir</option>
+                                <option value="Izin">Izin</option>
+                                <option value="Sakit">Sakit</option>
+                                <option value="Alpa">Alpa</option>
+                            </select>
+                        </div>
+
+                        <!-- Tombol Simpan -->
+                        <button type="submit" 
+                            class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            Simpan Absensi
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bagian Kanan: Dashboard & Tabel -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Kartu Rekapitulasi (Summary) -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col items-center justify-center">
+                        <span class="text-slate-500 text-sm font-semibold mb-1">Hadir</span>
+                        <span id="countHadir" class="text-3xl font-bold text-hadir">0</span>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col items-center justify-center">
+                        <span class="text-slate-500 text-sm font-semibold mb-1">Izin</span>
+                        <span id="countIzin" class="text-3xl font-bold text-izin">0</span>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col items-center justify-center">
+                        <span class="text-slate-500 text-sm font-semibold mb-1">Sakit</span>
+                        <span id="countSakit" class="text-3xl font-bold text-sakit">0</span>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col items-center justify-center">
+                        <span class="text-slate-500 text-sm font-semibold mb-1">Alpa</span>
+                        <span id="countAlpa" class="text-3xl font-bold text-alpa">0</span>
+                    </div>
+                </div>
+
+                <!-- Tabel Data Absensi -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b bg-slate-50">
+                        <h2 class="text-lg font-bold">Data Absensi Hari Ini</h2>
+                        <button onclick="hapusSemuaData()" class="text-sm text-red-500 hover:text-red-700 font-semibold px-2 py-1 rounded hover:bg-red-50 transition-colors">
+                            Kosongkan Data
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-sm uppercase tracking-wider">
+                                    <th class="p-4 font-semibold w-12 text-center">No</th>
+                                    <th class="p-4 font-semibold">Waktu</th>
+                                    <th class="p-4 font-semibold">Nama Siswa</th>
+                                    <th class="p-4 font-semibold">Kelas</th>
+                                    <th class="p-4 font-semibold text-center">Status</th>
+                                    <th class="p-4 font-semibold text-center w-24">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelBody" class="divide-y divide-slate-200">
+                                <!-- Data akan di-render di sini oleh JavaScript -->
+                            </tbody>
+                        </table>
+                        
+                        <!-- Pesan Kosong -->
+                        <div id="pesanKosong" class="p-8 text-center text-slate-500 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p>Belum ada data absensi.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <script src="absen.js">
+    </script>
+</body>
+</html>
